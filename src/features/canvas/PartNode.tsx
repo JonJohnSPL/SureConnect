@@ -1,5 +1,6 @@
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import type { AssemblyNode, Part, Port, ValidationStatus } from "../../engine";
+import { PartVisual } from "./PartVisual";
 
 export interface PartNodeData extends Record<string, unknown> {
   part: Part;
@@ -24,19 +25,6 @@ function handleStyle(port: Port, ports: Port[]) {
   return { left: offset };
 }
 
-function PartVisual({ icon }: { icon: string }) {
-  return (
-    <svg className="part-visual" viewBox="0 0 160 80" role="img" aria-label={icon}>
-      <path className="visual-line" d="M10 42 H48" />
-      <path className="visual-line" d="M112 42 H150" />
-      <rect className="visual-body" x="48" y="24" width="64" height="36" rx="6" />
-      <text x="80" y="47" textAnchor="middle">
-        {icon}
-      </text>
-    </svg>
-  );
-}
-
 export function PartNode({ data, selected }: NodeProps<PartFlowNode>) {
   const { part, assemblyNode, status } = data;
 
@@ -44,7 +32,7 @@ export function PartNode({ data, selected }: NodeProps<PartFlowNode>) {
     <div className={`part-node ${selected ? "selected" : ""} ${status}`}>
       <div className="node-head">
         <div className="node-icon">
-          <PartVisual icon={part.icon} />
+          <PartVisual part={part} variant="micro" />
         </div>
         <div>
           <strong>{assemblyNode.label}</strong>
@@ -52,7 +40,7 @@ export function PartNode({ data, selected }: NodeProps<PartFlowNode>) {
         </div>
       </div>
       <div className="node-body">
-        <PartVisual icon={part.icon} />
+        <PartVisual part={part} variant="node" />
         <div className="node-meta">
           <span>{part.material}</span>
           <span>{part.ports.length} ports</span>
@@ -80,4 +68,3 @@ export function PartNode({ data, selected }: NodeProps<PartFlowNode>) {
     </div>
   );
 }
-

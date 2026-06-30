@@ -4,7 +4,7 @@ import { AuthProvider } from "../hooks/useAuth";
 import { LoginPage } from "./LoginPage";
 
 describe("LoginPage", () => {
-  it("shows the Supabase configuration guard when env values are missing", async () => {
+  it("renders the sign-in form", async () => {
     render(
       <AuthProvider>
         <MemoryRouter>
@@ -13,8 +13,9 @@ describe("LoginPage", () => {
       </AuthProvider>,
     );
 
-    expect(await screen.findByText(/Missing Supabase env values/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /sign in/i })).toBeDisabled();
+    expect(await screen.findByRole("heading", { name: /Connection Master/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /sign in/i })).toBeEnabled();
   });
 });
-

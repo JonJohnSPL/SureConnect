@@ -11,7 +11,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Save, TestTube2, Wand2 } from "lucide-react";
+import { FileText, Save, TestTube2, Wand2 } from "lucide-react";
 import { DragEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchAssembly, saveAssemblyGraph } from "../data/assemblies";
@@ -30,6 +30,7 @@ import {
   type ValidationStatus,
 } from "../engine";
 import { BuildSheetPanels } from "../features/buildsheet/BuildSheetPanels";
+import { BuildSheetModal } from "../features/buildsheet/BuildSheetModal";
 import { PartNode, type PartNodeData } from "../features/canvas/PartNode";
 import { Inspector, type BuilderSelection } from "../features/inspector/Inspector";
 import { Toolbox } from "../features/toolbox/Toolbox";
@@ -74,6 +75,7 @@ function BuilderWorkspace() {
   const [context, setContext] = useState<AssemblyContext>(sampleContext);
   const [graph, setGraph] = useState<AssemblyGraph>(emptyGraph);
   const [selection, setSelection] = useState<BuilderSelection>(null);
+  const [reportOpen, setReportOpen] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -353,6 +355,10 @@ function BuilderWorkspace() {
             <Wand2 size={16} />
             Sample
           </button>
+          <button className="ghost" type="button" onClick={() => setReportOpen(true)}>
+            <FileText size={16} />
+            Build Sheet
+          </button>
           <button className="primary" type="button" onClick={() => saveMutation.mutate()} disabled={!isSupabaseConfigured || saveMutation.isPending}>
             <Save size={16} />
             Save
@@ -395,6 +401,16 @@ function BuilderWorkspace() {
         <Inspector context={context} graph={graph} parts={parts} selection={selection} onDelete={deleteSelection} onUpdateNode={updateNode} />
         <BuildSheetPanels issues={issues} bom={bom} steps={steps} />
       </aside>
+      <BuildSheetModal
+        assemblyName={name}
+        bom={bom}
+        context={context}
+        graph={graph}
+        issues={issues}
+        onClose={() => setReportOpen(false)}
+        open={reportOpen}
+        steps={steps}
+      />
     </main>
   );
 }

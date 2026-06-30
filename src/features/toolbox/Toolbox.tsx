@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Part } from "../../engine";
+import { PartVisual } from "../canvas/PartVisual";
 
 export function Toolbox({ parts }: { parts: Part[] }) {
   const [query, setQuery] = useState("");
@@ -43,7 +44,9 @@ export function Toolbox({ parts }: { parts: Part[] }) {
                   event.dataTransfer.effectAllowed = "copy";
                 }}
               >
-                <div className="part-card-icon">{part.icon}</div>
+                <div className="part-card-icon">
+                  <PartVisual part={part} variant="toolbox" />
+                </div>
                 <div>
                   <strong>{part.name}</strong>
                   <span>{part.partNumber}</span>
@@ -57,4 +60,3 @@ export function Toolbox({ parts }: { parts: Part[] }) {
     </aside>
   );
 }
-

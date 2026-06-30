@@ -334,7 +334,7 @@ p {
   cursor: grab;
   display: grid;
   gap: 10px;
-  grid-template-columns: 48px 1fr;
+  grid-template-columns: 76px 1fr;
   margin-bottom: 8px;
   padding: 10px;
 }
@@ -352,8 +352,9 @@ p {
   display: grid;
   font-size: 13px;
   font-weight: 900;
-  height: 48px;
+  height: 58px;
   justify-items: center;
+  overflow: hidden;
 }
 
 .part-card strong {
@@ -481,23 +482,71 @@ p {
   width: 100%;
 }
 
+.part-visual-toolbox {
+  height: 48px;
+}
+
+.part-visual-micro {
+  height: 34px;
+}
+
 .part-visual text {
-  fill: #0f766e;
-  font-size: 18px;
+  fill: #f8fafc;
+  font-size: 15px;
   font-weight: 900;
 }
 
 .visual-line {
   fill: none;
-  stroke: #64748b;
+  stroke: #486171;
   stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-width: 5;
 }
 
-.visual-body {
-  fill: #d9f2ee;
-  stroke: #0f766e;
-  stroke-width: 3;
+.visual-thin {
+  fill: none;
+  stroke: #6f8390;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.visual-thread {
+  fill: none;
+  stroke: #546775;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+}
+
+.visual-metal {
+  fill: #b9c5cc;
+  stroke: #516877;
+  stroke-width: 2.4;
+}
+
+.visual-dark {
+  fill: #334955;
+  stroke: #14262f;
+  stroke-width: 2.4;
+}
+
+.visual-fill-blue {
+  fill: #b7dded;
+  stroke: #17647f;
+  stroke-width: 2.4;
+}
+
+.visual-fill-green {
+  fill: #bfe8cf;
+  stroke: #217a48;
+  stroke-width: 2.4;
+}
+
+.visual-fill-yellow {
+  fill: #f4dfa7;
+  stroke: #9a6a12;
+  stroke-width: 2.4;
 }
 
 .node-meta {
@@ -713,6 +762,103 @@ p {
   min-height: 54px;
 }
 
+.report-backdrop {
+  align-items: center;
+  background: rgba(15, 23, 42, 0.62);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 50;
+}
+
+.report-modal {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  max-height: calc(100vh - 48px);
+  max-width: 1040px;
+  min-height: 0;
+  width: min(1040px, calc(100vw - 48px));
+}
+
+.report-modal-head {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.report-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.report-body {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow: auto;
+  padding: 22px;
+}
+
+.report-body h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.report-body h3 {
+  font-size: 15px;
+  margin: 22px 0 8px;
+}
+
+.report-body p + p {
+  margin-top: 8px;
+}
+
+.report-body table {
+  border-collapse: collapse;
+  margin: 10px 0 18px;
+  width: 100%;
+}
+
+.report-body th,
+.report-body td {
+  border: 1px solid var(--line);
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.report-body th {
+  background: var(--surface-2);
+}
+
+.report-body code {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+.check-cell {
+  width: 44px;
+}
+
+.signoff-cell {
+  height: 42px;
+  width: 36%;
+}
+
+.signoff-date-cell {
+  width: 18%;
+}
+
 @media (max-width: 1180px) {
   .app-shell {
     min-width: 0;
@@ -727,3 +873,53 @@ p {
   }
 }
 
+@media print {
+  body {
+    background: white;
+  }
+
+  .app-header,
+  .toolbox-panel,
+  .builder-main,
+  .right-panel,
+  .report-modal-head {
+    display: none !important;
+  }
+
+  .app-shell,
+  .builder-page,
+  .report-backdrop,
+  .report-modal,
+  .report-body {
+    background: white !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: black !important;
+    display: block !important;
+    height: auto !important;
+    inset: auto !important;
+    max-height: none !important;
+    max-width: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    position: static !important;
+    width: auto !important;
+  }
+
+  .report-body {
+    font-size: 11px;
+  }
+
+  .report-body h2 {
+    font-size: 20px;
+  }
+
+  .report-body th {
+    background: #eeeeee !important;
+  }
+
+  .report-body th,
+  .report-body td {
+    border-color: #444444 !important;
+  }
+}

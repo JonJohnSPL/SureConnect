@@ -22,24 +22,31 @@ function RequireAuth() {
   return <Outlet />;
 }
 
-const router = createBrowserRouter([
-  { path: "/login", element: <LoginPage /> },
+const routerBaseName = import.meta.env.BASE_URL === "/" ? undefined : import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const router = createBrowserRouter(
+  [
+    { path: "/login", element: <LoginPage /> },
+    {
+      element: <RequireAuth />,
+      children: [
+        {
+          element: <AppLayout />,
+          children: [
+            { index: true, element: <Navigate to="/assemblies" replace /> },
+            { path: "/assemblies", element: <AssembliesPage /> },
+            { path: "/builder", element: <BuilderPage /> },
+            { path: "/builder/:assemblyId", element: <BuilderPage /> },
+          ],
+        },
+      ],
+    },
+    { path: "*", element: <Navigate to="/assemblies" replace /> },
+  ],
   {
-    element: <RequireAuth />,
-    children: [
-      {
-        element: <AppLayout />,
-        children: [
-          { index: true, element: <Navigate to="/assemblies" replace /> },
-          { path: "/assemblies", element: <AssembliesPage /> },
-          { path: "/builder", element: <BuilderPage /> },
-          { path: "/builder/:assemblyId", element: <BuilderPage /> },
-        ],
-      },
-    ],
+    basename: routerBaseName,
   },
-  { path: "*", element: <Navigate to="/assemblies" replace /> },
-]);
+);
 
 export function App() {
   return (
@@ -50,4 +57,3 @@ export function App() {
     </QueryClientProvider>
   );
 }
-

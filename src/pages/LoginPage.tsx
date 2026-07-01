@@ -12,7 +12,7 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (session) return <Navigate to="/assemblies" replace />;
+  if (session) return <Navigate to="/" replace />;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -69,4 +69,3 @@ export function LoginPage() {
     </main>
   );
 }
-

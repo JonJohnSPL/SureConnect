@@ -26,6 +26,7 @@ interface PartRow {
   default_length_ft: number | null;
   icon: string | null;
   notes: string | null;
+  scope: "lab" | "field" | "shared" | null;
   approved: boolean;
   part_ports: PartPortRow[] | null;
 }
@@ -72,18 +73,22 @@ function mapPart(row: PartRow): Part {
   };
 }
 
-export async function fetchApprovedParts(): Promise<Part[]> {
+export async function fetchApprovedParts(scope: "lab" | "field" | "shared" = "lab"): Promise<Part[]> {
   const client = getSupabase();
-  const { data, error } = await client
+  let query = client
     .from("parts")
     .select(
-      "id, slug, name, manufacturer, part_number, category, material, max_pressure_psig, gases, default_length_ft, icon, notes, approved, part_ports(port_key, label, type, size, gender, thread, ferrule_required, sealant_rule, side)",
+      "id, slug, name, manufacturer, part_number, category, material, max_pressure_psig, gases, default_length_ft, icon, notes, scope, approved, part_ports(port_key, label, type, size, gender, thread, ferrule_required, sealant_rule, side)",
     )
-    .eq("approved", true)
+    .eq("approved", true);
+
+  if (scope !== "shared") query = query.in("scope", [scope, "shared"]);
+  else query = query.eq("scope", "shared");
+
+  const { data, error } = await query
     .order("category", { ascending: true })
     .order("name", { ascending: true });
 
   if (error) throw error;
   return ((data || []) as PartRow[]).map(mapPart);
 }
-

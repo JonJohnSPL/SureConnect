@@ -24,7 +24,7 @@ export function AssembliesPage() {
           <h2>Assemblies</h2>
           <p>Drafts and validated layouts saved to Supabase.</p>
         </div>
-        <button className="primary" type="button" onClick={() => navigate("/builder")}>
+        <button className="primary" type="button" onClick={() => navigate("/lab/builder")}>
           <Plus size={16} />
           New Assembly
         </button>
@@ -46,7 +46,7 @@ export function AssembliesPage() {
               <span className="status-pill status-draft">{assembly.status}</span>
             </div>
             <div className="row-actions">
-              <Link className="icon-button" to={`/builder/${assembly.id}`} title="Open assembly">
+              <Link className="icon-button" to={`/lab/builder/${assembly.id}`} title="Open assembly">
                 <Edit3 size={16} />
               </Link>
               <button
@@ -64,4 +64,3 @@ export function AssembliesPage() {
     </main>
   );
 }
-

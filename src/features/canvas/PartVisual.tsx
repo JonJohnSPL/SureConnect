@@ -23,7 +23,7 @@ export function getPartVisualType(part: Part): PartVisualType {
 
   if (slug.includes("source") || name.includes("cylinder")) return "cylinder";
   if (name.includes("regulator")) return "regulator";
-  if (category.includes("tubing")) return "tubing";
+  if (category.includes("tubing") || category.includes("hose")) return "tubing";
   if (name.includes("needle valve")) return "needleValve";
   if (category.includes("valves")) return "valve";
   if (name.includes("reducer")) return "reducer";
@@ -182,4 +182,3 @@ function PartVisualDrawing({ type }: { type: PartVisualType }) {
       );
   }
 }
-

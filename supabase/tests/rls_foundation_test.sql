@@ -1,16 +1,10 @@
-BEGIN;
-SELECT plan(1);
-
--- Examples: https://pgtap.org/documentation.html
-
-SELECT * FROM finish();
-ROLLBACK;
 begin;
 
-select plan(8);
+select plan(14);
 
 select has_table('public', 'parts', 'parts table exists');
 select has_table('public', 'assemblies', 'assemblies table exists');
+select has_table('public', 'field_rigups', 'field_rigups table exists');
 select has_function('public', 'save_assembly_graph', ARRAY['jsonb'], 'save_assembly_graph RPC exists');
 
 insert into auth.users (id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at)
@@ -63,6 +57,7 @@ select is(
 reset role;
 
 create temporary table test_saved_assemblies (id uuid not null);
+create temporary table test_saved_field_rigups (id uuid not null);
 
 set local role authenticated;
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-0000000000a1';
@@ -117,6 +112,57 @@ select is(
   1,
   'no duplicate assembly is created during rejected save'
 );
+
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-0000000000a1';
+with inserted as (
+  insert into public.field_rigups (name, customer_config, truck_config, graph)
+  values (
+    'Owner Field Rig-Up',
+    '{"endpointType":"Meter","meterType":"Coriolis","size":"2 in","rating":"ANSI 150 RF"}'::jsonb,
+    '{"type":"Compact Prover (SVP)","connection":"2 in Camlock"}'::jsonb,
+    '{"nodes":[],"connections":[]}'::jsonb
+  )
+  returning id
+)
+insert into test_saved_field_rigups
+select id from inserted;
+
+select is(
+  (select count(*)::int from public.field_rigups where id = (select id from test_saved_field_rigups)),
+  1,
+  'owner can insert and read their field rig-up'
+);
+reset role;
+
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-0000000000b2';
+select is(
+  (select count(*)::int from public.field_rigups where id = (select id from test_saved_field_rigups)),
+  0,
+  'another user cannot read the owner field rig-up'
+);
+
+update public.field_rigups
+set name = 'Hijacked Field Rig-Up'
+where id = (select id from test_saved_field_rigups);
+reset role;
+
+select is(
+  (select name from public.field_rigups where id = (select id from test_saved_field_rigups)),
+  'Owner Field Rig-Up',
+  'another user cannot update the owner field rig-up'
+);
+
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-0000000000a1';
+delete from public.field_rigups where id = (select id from test_saved_field_rigups);
+select is(
+  (select count(*)::int from public.field_rigups where id = (select id from test_saved_field_rigups)),
+  0,
+  'owner can delete their field rig-up'
+);
+reset role;
 
 select * from finish();
 

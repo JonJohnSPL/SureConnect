@@ -1,10 +1,12 @@
-import { LogOut, Plus, Table2 } from "lucide-react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { FlaskConical, Home, LogOut, Plus, Table2 } from "lucide-react";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export function AppLayout() {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isField = location.pathname.startsWith("/field");
 
   return (
     <div className="app-shell">
@@ -17,13 +19,21 @@ export function AppLayout() {
           </div>
         </div>
         <nav className="nav-tabs">
-          <NavLink to="/assemblies">
-            <Table2 size={16} />
-            Assemblies
+          <NavLink to="/">
+            <Home size={16} />
+            Scope
           </NavLink>
-          <button type="button" onClick={() => navigate("/builder")}>
+          <NavLink to="/lab/assemblies">
+            <FlaskConical size={16} />
+            Lab
+          </NavLink>
+          <NavLink to="/field/rig-ups">
+            <Table2 size={16} />
+            Field
+          </NavLink>
+          <button type="button" onClick={() => navigate(isField ? "/field/builder" : "/lab/builder")}>
             <Plus size={16} />
-            New
+            {isField ? "New Field" : "New Lab"}
           </button>
           <button type="button" onClick={() => void signOut()}>
             <LogOut size={16} />
@@ -35,4 +45,3 @@ export function AppLayout() {
     </div>
   );
 }
-

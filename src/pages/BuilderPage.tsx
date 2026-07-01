@@ -80,8 +80,8 @@ function BuilderWorkspace() {
   const [localError, setLocalError] = useState<string | null>(null);
 
   const partsQuery = useQuery({
-    queryKey: ["parts"],
-    queryFn: fetchApprovedParts,
+    queryKey: ["parts", "lab"],
+    queryFn: () => fetchApprovedParts("lab"),
     enabled: isSupabaseConfigured,
   });
   const assemblyQuery = useQuery({
@@ -129,7 +129,7 @@ function BuilderWorkspace() {
       setDirty(false);
       queryClient.invalidateQueries({ queryKey: ["assemblies"] });
       queryClient.invalidateQueries({ queryKey: ["assembly", id] });
-      if (!assemblyId) navigate(`/builder/${id}`, { replace: true });
+      if (!assemblyId) navigate(`/lab/builder/${id}`, { replace: true });
     },
   });
 

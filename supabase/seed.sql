@@ -354,3 +354,209 @@ begin
   end loop;
 end $$;
 
+do $$
+declare
+  v_part jsonb;
+  v_port jsonb;
+  v_part_id uuid;
+  v_parts jsonb := '[
+    {
+      "slug": "field-hose-2-camlock-10",
+      "category": "Field Hoses",
+      "icon": "HSE",
+      "name": "2 in HP Armored Hose, 10 ft",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-HOSE-2-CAMLOCK-10",
+      "material": "Armored hose",
+      "max_pressure_psig": 250,
+      "default_length_ft": 10,
+      "notes": "Planning aid / spec-review required. Verify approved hose assembly, MAOP, service compatibility, inspection status, and actual part number before use.",
+      "ports": [
+        { "port_key": "a", "label": "2 in Camlock", "type": "field_camlock", "size": "2 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "b", "label": "2 in Camlock", "type": "field_camlock", "size": "2 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-hose-2-camlock-20",
+      "category": "Field Hoses",
+      "icon": "HSE",
+      "name": "2 in HP Armored Hose, 20 ft",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-HOSE-2-CAMLOCK-20",
+      "material": "Armored hose",
+      "max_pressure_psig": 250,
+      "default_length_ft": 20,
+      "notes": "Planning aid / spec-review required. Verify approved hose assembly, MAOP, service compatibility, inspection status, and actual part number before use.",
+      "ports": [
+        { "port_key": "a", "label": "2 in Camlock", "type": "field_camlock", "size": "2 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "b", "label": "2 in Camlock", "type": "field_camlock", "size": "2 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-hose-3-hammer-union-10",
+      "category": "Field Hoses",
+      "icon": "HSE",
+      "name": "3 in HP Armored Hose, 10 ft",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-HOSE-3-HU-10",
+      "material": "Armored hose",
+      "max_pressure_psig": 250,
+      "default_length_ft": 10,
+      "notes": "Planning aid / spec-review required. Verify approved hose assembly, MAOP, service compatibility, inspection status, and actual part number before use.",
+      "ports": [
+        { "port_key": "a", "label": "3 in Hammer Union", "type": "field_hammer_union", "size": "3 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "b", "label": "3 in Hammer Union", "type": "field_hammer_union", "size": "3 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-adapter-2-ansi150-to-2-camlock",
+      "category": "Field Adapters",
+      "icon": "ADP",
+      "name": "2 in ANSI 150 RF to 2 in Camlock",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-ADP-2-150-CAM",
+      "material": "Carbon steel / stainless trim",
+      "max_pressure_psig": 250,
+      "notes": "Planning aid / spec-review required. Verify flange class, gasket, bolt kit, MAOP, and actual adapter part number before use.",
+      "ports": [
+        { "port_key": "flange", "label": "2 in ANSI 150 RF", "type": "field_flange_ansi_150_rf", "size": "2 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "camlock", "label": "2 in Camlock", "type": "field_camlock", "size": "2 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-adapter-3-ansi300-to-3-hammer-union",
+      "category": "Field Adapters",
+      "icon": "ADP",
+      "name": "3 in ANSI 300 RF to 3 in Hammer Union",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-ADP-3-300-HU",
+      "material": "Carbon steel / stainless trim",
+      "max_pressure_psig": 740,
+      "notes": "Planning aid / spec-review required. Verify flange class, gasket, bolt kit, MAOP, and actual adapter part number before use.",
+      "ports": [
+        { "port_key": "flange", "label": "3 in ANSI 300 RF", "type": "field_flange_ansi_300_rf", "size": "3 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "hammer", "label": "3 in Hammer Union", "type": "field_hammer_union", "size": "3 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-adapter-2-camlock-reducer-1-5",
+      "category": "Field Adapters",
+      "icon": "RED",
+      "name": "2 in Camlock Reducer to 1.5 in",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-RED-2-CAM-1-5",
+      "material": "Carbon steel / stainless trim",
+      "max_pressure_psig": 250,
+      "notes": "Planning aid / spec-review required. Verify reducer rating, seal compatibility, MAOP, and actual part number before use.",
+      "ports": [
+        { "port_key": "large", "label": "2 in Camlock", "type": "field_camlock", "size": "2 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "small", "label": "1.5 in Camlock", "type": "field_camlock", "size": "1.5 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-valve-dbb-2-flange",
+      "category": "Field Valves",
+      "icon": "VAL",
+      "name": "2 in DBB Valve (Double Block and Bleed)",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-DBB-2-150",
+      "material": "Carbon steel / stainless trim",
+      "max_pressure_psig": 250,
+      "notes": "Planning aid / spec-review required. Verify valve class, bleed configuration, MAOP, and actual part number before use.",
+      "ports": [
+        { "port_key": "in", "label": "2 in ANSI 150 RF", "type": "field_flange_ansi_150_rf", "size": "2 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "out", "label": "2 in ANSI 150 RF", "type": "field_flange_ansi_150_rf", "size": "2 in", "gender": "bidirectional", "side": "right" }
+      ]
+    },
+    {
+      "slug": "field-valve-dbb-3-flange",
+      "category": "Field Valves",
+      "icon": "VAL",
+      "name": "3 in DBB Valve (Double Block and Bleed)",
+      "manufacturer": "Planning Catalog",
+      "part_number": "FIELD-DBB-3-300",
+      "material": "Carbon steel / stainless trim",
+      "max_pressure_psig": 740,
+      "notes": "Planning aid / spec-review required. Verify valve class, bleed configuration, MAOP, and actual part number before use.",
+      "ports": [
+        { "port_key": "in", "label": "3 in ANSI 300 RF", "type": "field_flange_ansi_300_rf", "size": "3 in", "gender": "bidirectional", "side": "left" },
+        { "port_key": "out", "label": "3 in ANSI 300 RF", "type": "field_flange_ansi_300_rf", "size": "3 in", "gender": "bidirectional", "side": "right" }
+      ]
+    }
+  ]'::jsonb;
+begin
+  for v_part in
+    select value from jsonb_array_elements(v_parts)
+  loop
+    insert into public.parts (
+      slug,
+      category,
+      icon,
+      name,
+      manufacturer,
+      part_number,
+      material,
+      max_pressure_psig,
+      gases,
+      default_length_ft,
+      notes,
+      scope,
+      approved
+    )
+    values (
+      v_part->>'slug',
+      v_part->>'category',
+      v_part->>'icon',
+      v_part->>'name',
+      v_part->>'manufacturer',
+      v_part->>'part_number',
+      v_part->>'material',
+      (v_part->>'max_pressure_psig')::numeric,
+      array['Crude Oil', 'Refined Product', 'Water', 'Hydrocarbon'],
+      nullif(v_part->>'default_length_ft', '')::numeric,
+      v_part->>'notes',
+      'field',
+      true
+    )
+    on conflict (slug) do update
+    set
+      category = excluded.category,
+      icon = excluded.icon,
+      name = excluded.name,
+      manufacturer = excluded.manufacturer,
+      part_number = excluded.part_number,
+      material = excluded.material,
+      max_pressure_psig = excluded.max_pressure_psig,
+      gases = excluded.gases,
+      default_length_ft = excluded.default_length_ft,
+      notes = excluded.notes,
+      scope = excluded.scope,
+      approved = excluded.approved
+    returning id into v_part_id;
+
+    delete from public.part_ports where part_id = v_part_id;
+
+    for v_port in
+      select value from jsonb_array_elements(v_part->'ports')
+    loop
+      insert into public.part_ports (
+        part_id,
+        port_key,
+        label,
+        type,
+        size,
+        gender,
+        side
+      )
+      values (
+        v_part_id,
+        v_port->>'port_key',
+        v_port->>'label',
+        v_port->>'type',
+        nullif(v_port->>'size', ''),
+        v_port->>'gender',
+        v_port->>'side'
+      );
+    end loop;
+  end loop;
+end $$;
